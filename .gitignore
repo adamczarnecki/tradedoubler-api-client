@@ -1,0 +1,7 @@
+# Specify filepatterns you want git to ignore.
+*.csv
+*.json
+__pycache__/
+build/
+dist/
+*.egg-info
