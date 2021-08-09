@@ -7,7 +7,7 @@ class Reporting:
     def __init__(self, conector):
         self.con = conector
 
-    def get_transactions(self, status='', fromDate='', toDate='', reportCurrencyCode='PLN', eventId=''):
+    def get_transactions(self, status='', fromDate='', toDate='', reportCurrencyCode='PLN', eventId='', **kwargs):
         """ Fetch all transactions. All parameters are optional.
 
         Params: status ->'P', 'A', 'D' default - all, fromDate, toDate-> %Y%m%d default yesterday , reportCurrencyCode->  iso code default 'PLN', eventId
@@ -15,28 +15,29 @@ class Reporting:
         Returns Report object with extra methotds
         """
         url = 'https://connect.tradedoubler.com/advertiser/report/transactions/export'
-        parameters = f'?reportCurrencyCode={reportCurrencyCode}'
+        parameters = f'?format=json&reportCurrencyCode={reportCurrencyCode}'
         if fromDate == '':
             yesterday = datetime.now() - timedelta(8)
             yesterdayStr = datetime.strftime(yesterday, '%Y%m%d')
-            parameters = parameters + f'&fromDate={yesterdayStr}'
+            parameters += f'&fromDate={yesterdayStr}'
         else:
-            parameters = parameters + f'&fromDate={fromDate}'
+            parameters += f'&fromDate={fromDate}'
         if toDate == '':
             yesterday = datetime.now() - timedelta(1)
             yesterdayStr = datetime.strfime(yesterday, '%Y%m%d')
-            parameters = parameters + f'&toDate={yesterdayStr}'
+            parameters += f'&toDate={yesterdayStr}'
         else:
-            parameters = parameters + f'&toDate={toDate}'
+            parameters += f'&toDate={toDate}'
         if status != '':
-            parameters + f'&status={status}'
+            parameters += f'&status={status}'
         if eventId != '':
-            parameters + f'&eventId={eventId}'
-
+            parameters += f'&eventId={eventId}'
+        for key, value in kwargs.items():
+            parameters += f'&{key}={value}'
         r = requests.get(url + parameters,
                          headers=self.con.get_request_header())
         if r.status_code != 200:
-            raise ConnectionError(f'{r.text}')
+            raise ConnectionError(f'{r.text}\n\nquery: {url + parameters}')
 
         return Report(r.json(), fromDate, toDate)
 

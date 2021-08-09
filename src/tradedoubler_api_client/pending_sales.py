@@ -32,7 +32,7 @@ class Pending_Sales:
         Returns List_Of_Pending_Sales object
          """
         print('\nDownloading pending sales...')
-        progres_bar(10, 0, ' start    ')
+        progres_bar(10, 0)
         next_chunk = self.__get(start=start, end=end)
         total = next_chunk['total']
         all_items = next_chunk['items']
