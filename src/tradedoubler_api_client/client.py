@@ -22,7 +22,7 @@ class Tradedoubler:
     @staticmethod
     def __open_credentials(credentials_path):
         source = path.dirname(path.abspath(argv[0]))
-        with open(source + '\\' + credentials_path) as f:
+        with open(f'{source}/{credentials_path}') as f:
             return json.load(f)
 
     def __get_auth_token(self):
