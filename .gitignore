@@ -4,4 +4,11 @@
 __pycache__/
 build/
 dist/
-*.egg-info
+*.egg
+src/tradedoubler_api_client.egg-info/
+Include/
+Lib/
+Scripts/
+examples/tradedoubler_api_client/
+examples/csv/
+examples/json/

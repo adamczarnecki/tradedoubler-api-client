@@ -11,13 +11,14 @@ from tradedoubler_api_client.reporting import Reporting
 
 
 class Tradedoubler:
-    def __init__(self, credentials_path):
+    def __init__(self, credentials_path, print_mode=False):
         credentials = self.__open_credentials(credentials_path)
         self.td_secret = credentials['td_secret']
         self.td_id = credentials['td_id']
         self.td_user_name = credentials['td_user_name']
         self.td_userpassword = credentials['td_userpassword']
         self.athu = self.__get_auth_token()
+        self.print_mode = print_mode
 
     @staticmethod
     def __open_credentials(credentials_path):

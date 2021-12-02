@@ -5,9 +5,9 @@ import pprint
 def check_transaction(transaction):
     # some logis
     if transaction == 'good':
-        return (True, 0)
+        return True, 0
     elif transaction == 'not good':
-        return (False, 10)
+        return False, 10
     else:
         return 'do logic here'
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     sales_to_updates = []
 
-    for transaction in list_pendint_sales:
+    for transaction in list_pendint_sales.items():
         validation, reason = check_transaction(transaction)
         if validation:
             sales_to_updates.append(pending_sales.prep_approve(transaction))

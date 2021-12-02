@@ -4,22 +4,6 @@ import csv
 import json
 
 
-def progres_bar(total, progress, status=''):
-    # Displays or updates a console progress bar.
-    # Original source: https://stackoverflow.com/a/15860757/1391441
-
-    barLength = 20
-    progress = float(progress) / float(total)
-    if progress >= 1.:
-        progress, status = 1, "\r\n"
-    block = int(round(barLength * progress))
-    text = "\r[{}] {:.0f}% {}".format(
-        "#" * block + "-" * (barLength - block), round(progress * 100, 0),
-        status)
-    sys.stdout.write(text)
-    sys.stdout.flush()
-
-
 def file_colision_detector(file_name, extra_path):
     path = os.path.dirname(os.path.abspath(sys.argv[0]))
     file_name = file_name.split('.')
@@ -38,9 +22,10 @@ def file_colision_detector(file_name, extra_path):
         return f'{path}/{file_name[0]}-(0).{file_name[1]}'
 
 
-def save_list_of_dicts_to_csv(list_of_dicts, filename, path):
+def save_list_of_dicts_to_csv(list_of_dicts, filename, path, print_mode):
     if len(list_of_dicts) == 0:
-        print('\nnothing to save in csv\n')
+        if print_mode:
+            print('\nnothing to save in csv\n')
         return False
     filename = file_colision_detector(filename, path)
     with open(filename, 'w', newline='', encoding='utf-8') as f:
@@ -53,12 +38,14 @@ def save_list_of_dicts_to_csv(list_of_dicts, filename, path):
                 continue
             wr.writerow(list(item.values()))
 
-    print(f'\nFile is ready: {filename}\n')
+    if print_mode:
+        print(f'\nFile is ready: {filename}\n')
 
 
-def save_dict_to_json(dct, filename, path):
+def save_dict_to_json(dct, filename, path, print_mode):
     filename = file_colision_detector(filename, path)
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(dct, f, ensure_ascii=False, indent=4)
 
-    print(f'\nFile is ready: {filename}\n')
+    if print_mode:
+        print(f'\nFile is ready: {filename}\n')

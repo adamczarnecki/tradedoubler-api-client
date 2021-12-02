@@ -67,7 +67,3 @@ class Report:
         """ save current state in json file in current or in relative 'path' directory"""
         filename = f'report-{self.flag}-from-{self.fromDate}-to-{self.toDate}-gen-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.json'
         save_dict_to_json(self.items, filename, path)
-
-
-if __name__ == '__main__':
-    rep = Report().get_transactions()
