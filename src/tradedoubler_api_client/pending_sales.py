@@ -113,7 +113,7 @@ class Updated_Sales:
         self.items = report['items']
         self.print_mode = print_mode
 
-        if self.con.print_mode:
+        if self.print_mode:
             print(f'\n{self}')
 
     def __str__(self):
