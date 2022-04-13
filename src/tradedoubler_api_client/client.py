@@ -1,8 +1,6 @@
 import requests
 import base64
 import json
-from os import path
-from sys import argv
 from tradedoubler_api_client.pending_sales import Pending_Sales
 from tradedoubler_api_client.reporting import Reporting
 # https://advertiserwip.docs.apiary.io/
@@ -22,8 +20,7 @@ class Tradedoubler:
 
     @staticmethod
     def __open_credentials(credentials_path):
-        source = path.dirname(path.abspath(argv[0]))
-        with open(f'{source}/{credentials_path}') as f:
+        with open(credentials_path) as f:
             return json.load(f)
 
     def __get_auth_token(self):

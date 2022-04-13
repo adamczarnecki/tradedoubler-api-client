@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='tradedoubler_api_client',
-    version='0.5',
+    version='0.6.1',
     description='Unofficial simple python wrapper for Tradedoubler API',
     long_description=long_description,
     long_description_content_type="text/markdown",
