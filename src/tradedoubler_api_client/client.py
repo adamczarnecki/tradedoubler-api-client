@@ -49,9 +49,9 @@ class Tradedoubler:
         if req.status_code == 200:
             pass
         elif req.status_code == 429:
-            raise TradedoublerRateLimitExceeded(f'{req.status_code} - {req.text}')
+            raise TradedoublerRateLimitExceeded(f'{req.status_code} - {req.text}\n\n{req.url}')
         elif req.status_code != 200:
-            raise TradedoublerConnectionError(f'{req.status_code} - {req.text}')
+            raise TradedoublerConnectionError(f'{req.status_code} - {req.text}\n\n{req.url}')
 
     def get_my_user_details(self):
         r = requests.get('https://connect.tradedoubler.com/usermanagement/users/me', headers=self.get_request_header())
