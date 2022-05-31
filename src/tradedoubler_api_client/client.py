@@ -3,6 +3,7 @@ import base64
 import json
 from tradedoubler_api_client.pending_sales import Pending_Sales
 from tradedoubler_api_client.reporting import Reporting
+from tradedoubler_api_client.exceptions import TradedoublerConnectionError, TradedoublerRateLimitExceeded
 # https://advertiserwip.docs.apiary.io/
 # dokumentacja tego gówna
 # luźno powiązana z rzeczywostością
@@ -35,8 +36,7 @@ class Tradedoubler:
             'Authorization': f'Basic {self.athu}'
         }
         r = requests.post('https://connect.tradedoubler.com/uaa/oauth/token', data=values, headers=headers)
-        if r.status_code != 200:
-            raise ConnectionError(f'{r.text}')
+        self.handle_errors(r)
         return r.json()["access_token"]
 
     def get_request_header(self, content_type='application/json'):
@@ -45,10 +45,17 @@ class Tradedoubler:
             'Authorization': f'Bearer {self.__get_bearer()}'
         }
 
+    def handle_errors(self, req):
+        if req.status_code == 200:
+            pass
+        elif req.status_code == 429:
+            raise TradedoublerRateLimitExceeded(f'{req.status_code} - {req.text}')
+        elif req.status_code != 200:
+            raise TradedoublerConnectionError(f'{req.status_code} - {req.text}')
+
     def get_my_user_details(self):
         r = requests.get('https://connect.tradedoubler.com/usermanagement/users/me', headers=self.get_request_header())
-        if r.status_code != 200:
-            raise ConnectionError(f'{r.text}')
+        self.handle_errors(r)
         return r.json()
 
     def pending_sales(self):

@@ -23,8 +23,7 @@ class Pending_Sales:
             req = req + f'&endDate={end}'
 
         r = requests.get(req, headers=self.con.get_request_header())
-        if r.status_code != 200:
-            raise ConnectionError(f'{r.text}')
+        self.con.handle_errors(r)
         return r.json()
 
     def get_all(self, start='', end=''):
@@ -55,8 +54,7 @@ class Pending_Sales:
         values = json.dumps(values, indent=4)
 
         r = requests.put('https://connect.tradedoubler.com/advertiser/pendingSales', data=values, headers=self.con.get_request_header())
-        if r.status_code != 200:
-            raise ConnectionError(f'{r.text}')
+        self.con.handle_errors(r)
         return Updated_Sales(r.json(), self.con.print_mode)
 
     @staticmethod

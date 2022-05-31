@@ -36,8 +36,7 @@ class Reporting:
             parameters += f'&{key}={value}'
         r = requests.get(url + parameters,
                          headers=self.con.get_request_header())
-        if r.status_code != 200:
-            raise ConnectionError(f'{r.text}\n\nquery: {url + parameters}')
+        self.con.handle_errors(r)
 
         return Report(r.json(), fromDate, toDate)
 
