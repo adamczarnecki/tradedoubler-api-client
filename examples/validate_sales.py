@@ -42,14 +42,14 @@ if __name__ == '__main__':
     update_report.csv(path='update_reports')        # report with fails by default
     update_report.json(path='jsons', status='all')  # other status "success"
 
-    fails = update_report.get_fails()
+    fails = update_report.fails
 
     for faild_update in fails:
         if transaction.status == -1:
             next_steps = other_logic(faild_update)
             print(next_steps)
 
-    success = update_report.get_success()
+    success = update_report.success
 
     for succeeded_update in success:
         print(f'Yeeee {succeeded_update["transactionId"]}, no idea why')

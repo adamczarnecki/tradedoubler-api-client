@@ -12,3 +12,4 @@ Scripts/
 examples/tradedoubler_api_client/
 examples/csv/
 examples/json/
+win-publish.bat

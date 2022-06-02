@@ -108,7 +108,8 @@ class Updated_Sales:
         self.total = report['total']
         self.success = report['success']
         self.fail = report['fail']
-        self.items = report['items']
+        self.fails = report['failedItems']
+        self.success = report['successfulItems']
         self.print_mode = print_mode
 
         if self.print_mode:
@@ -117,30 +118,31 @@ class Updated_Sales:
     def __str__(self):
         return f'Update Results:\nTotal: {self.total}\nSuccess: {self.success}\nFail: {self.fail}'
 
+    # Backward compatibility
     def get_success(self):
-        return list(filter(lambda x: x['status'] == 0, self.items))
+        return self.success
 
     def get_fails(self):
-        return list(filter(lambda x: x['status'] == -1, self.items))
+        return self.fails
 
     def csv(self, status='fail', path=''):
         if status == 'fail':
             filename = f'update-report-fails-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.csv'
-            save_list_of_dicts_to_csv(self.get_fails(), filename, path, self.print_mode)
+            save_list_of_dicts_to_csv(self.fails, filename, path, self.print_mode)
         elif status == 'success':
             filename = f'update-report-successes-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.csv'
-            save_list_of_dicts_to_csv(self.get_success(), filename, path, self.print_mode)
+            save_list_of_dicts_to_csv(self.success, filename, path, self.print_mode)
         else:
             filename = f'update-report-all-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.csv'
-            save_list_of_dicts_to_csv([{"status": '', "transactionId": '', "action": '', "reason": '', "error": ''}] + self.items, filename, path, self.print_mode)
+            save_list_of_dicts_to_csv([{"status": '', "transactionId": '', "action": '', "reason": '', "error": ''}] + self.fails + self.success, filename, path, self.print_mode)
 
     def json(self, status='fail', path=''):
         if status == 'fail':
             filename = f'update-report-fails-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.json'
-            save_dict_to_json(self.get_fails(), filename, path, self.print_mode)
+            save_dict_to_json(self.fails, filename, path, self.print_mode)
         elif status == 'success':
             filename = f'update-report-successes-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.json'
-            save_dict_to_json(self.get_success(), filename, path, self.print_mode)
+            save_dict_to_json(self.success, filename, path, self.print_mode)
         else:
             filename = f'update-report-all-{datetime.strftime(datetime.now(), "%Y-%m-%d")}.json'
-            save_dict_to_json({'total': self.total, 'success': self.success, 'fail': self.fail, 'items': self.items}, filename, path, self.print_mode)
+            save_dict_to_json({'total': self.total, 'success': self.success, 'fail': self.fail, 'fails': self.fails, 'successes': self.success}, filename, path, self.print_mode)
