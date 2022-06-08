@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 import json
+import time
 from tradedoubler_api_client.utilities import save_list_of_dicts_to_csv, save_dict_to_json
 
 
@@ -23,7 +24,9 @@ class Pending_Sales:
             req = req + f'&endDate={end}'
 
         r = requests.get(req, headers=self.con.get_request_header())
-        self.con.handle_errors(r)
+        if r.status_code == 429:
+            time.sleep(60)
+            r = requests.get(req, headers=self.con.get_request_header())
         return r.json()
 
     def get_all(self, start='', end=''):
