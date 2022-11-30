@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import json
 import time
 from tradedoubler_api_client.utilities import save_list_of_dicts_to_csv, save_dict_to_json
+from tradedoubler_api_client.exceptions import TradedoublerRateLimitExceeded
 
 
 class Pending_Sales:
@@ -41,7 +42,11 @@ class Pending_Sales:
         all_items = next_chunk['items']
         offset = 100
         while total > offset:
-            next_chunk = self.__get(offset=offset, start=start, end=end)
+            try:
+                next_chunk = self.__get(offset=offset, start=start, end=end)
+            except TradedoublerRateLimitExceeded:
+                time.sleep(60)
+                next_chunk = self.__get(offset=offset, start=start, end=end)
             all_items += next_chunk['items']
             offset += 100
         return List_Of_Pending_Sales(all_items, self.con.print_mode)
